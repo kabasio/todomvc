@@ -8,3 +8,16 @@ if (question === 'fine') {
 } else {
   alert('Are you ok? ');
 } */
+
+const input = document.getElementsByClassName('new-todo') [0] ;
+
+console.log(input);
+
+input.addEventListener('keydown', function(e) {
+  console.log(e);
+  if (e.keyCode === 13) {
+    alert('できたよ');
+  }
+});
+
+
