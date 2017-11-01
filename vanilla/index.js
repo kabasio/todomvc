@@ -1,61 +1,39 @@
-/* console.log('Hi');
+const $inputNewTodo = document.getElementsByClassName('new-todo')[0];
 
+function createNewTodo(name) {
+  const $li = document.createElement('li');
+  const $div = document.createElement('div');
+  $div.className = 'view';
 
-const question = prompt('Hi?');
+  const $inputToggle = document.createElement('input');
+  $inputToggle.setAttribute('type','checkbox');
+  $inputToggle.className = 'toggle';
 
-if (question === 'fine') {
-  alert("I'm so glad to hear that.");
-} else {
-  alert('Are you ok? ');
-} */
+  const $label = document.createElement('label');
+  $label.textContent = name;
 
-const input = document.getElementsByClassName('new-todo') [0] ;
+  const $button = document.createElement('button');
+  $button.className = 'destroy';
 
-function createNewTask (name){
-  const li = document.createElement('li');
-  const div = document.createElement('div');
-  div.className = 'view';
+  $div.appendChild($inputToggle);
+  $div.appendChild($label);
+  $div.appendChild($button);
 
-  const input = document.createElement('input');
-  input.setAttribute('type','checkbox');
+  const $inputEdit = document.createElement('input');
+  $inputEdit.className = 'edit';
 
-  const label = document.createElement('label');
-  label.value = name;
+  $li.appendChild($div);
+  $li.appendChild($inputEdit);
 
-  const button = document.createElement('button');
-  button.className = 'destroy';
+  return $li;
+};
 
-  div.appendChild(input);
-  div.appendChild(label);
-  div.appendChild(button);
-
-  const edit = document.createElement('input');
-  edit.className = 'edit';
-
-  li.appendChild(div);
-  li.appendChild(edit);
-
-
-  return li;
-}; 
-
-
-input.addEventListener('keydown', function(e) {
+$inputNewTodo.addEventListener('keydown', function(e) {
   if (e.keyCode === 13) {
-    createNewTask();
-    const newTask = input.value;
-    const oya = document.getElementsByClassName('todo-list')[0];
-    const  li  = createNewTask(newTask);
-    oya.appendChild(li);
-    console.log(newTask);
-
-    /* やりたいこと
- 1.フォームの値を取得する ◎
- 2.新しいliをつくる
- 3.todo-rist(ul)に、上記で作成したliを入れる
- 4.liに取得した値を入れる(data-idってやつがひもづいてる
-    console.log(newTask);
-    */
+    const newTodo = $inputNewTodo.value;
+    const $ulTodoList = document.getElementsByClassName('todo-list')[0];
+    const $li = createNewTodo(newTodo);
+    $ulTodoList.appendChild($li);
+    $inputNewTodo.value = '';
   }
 });
-
