@@ -4,6 +4,7 @@ function createNewTodo(name) {
   const $li = document.createElement('li');
   const $div = document.createElement('div');
   $div.className = 'view';
+  
 
   const $inputToggle = document.createElement('input');
   $inputToggle.setAttribute('type','checkbox');
@@ -37,3 +38,14 @@ $inputNewTodo.addEventListener('keydown', function(e) {
     $inputNewTodo.value = '';
   }
 });
+
+const $CompletedTodo = document.getElementsByClassName('toggle')[0];
+const $liTodo = document.getElementsByClassName('todo-list')[0].children[0];
+
+$CompletedTodo.addEventListener('click', function() {
+  if ($liTodo.className === 'completed') {
+    $liTodo.className = '';
+  } else {
+    $liTodo.className = 'completed';
+  }
+}); 
