@@ -1,5 +1,3 @@
-const $inputNewTodo = document.getElementsByClassName('new-todo')[0];
-
 function createNewTodo(name) {
   const $li = document.createElement('li');
   const $div = document.createElement('div');
@@ -12,9 +10,11 @@ function createNewTodo(name) {
     if ($li.className === 'completed') {
       $li.removeAttribute('class');
       $inputToggle.removeAttribute('checked');
+      store.toggleTodoStatus();
     } else {
       $li.setAttribute('class', 'completed');
       $inputToggle.setAttribute('checked','');
+      store.toggleTodoStatus(); 
     }
   }); 
 
@@ -37,96 +37,94 @@ function createNewTodo(name) {
   return $li;
 };
 
-$inputNewTodo.addEventListener('keydown', f unction(e) {
+function createStore () {
+  const todos = [];
+  const $ulTodoList = document.querySelector('.todo-list');
+  let status = 'SHOW_ALL';
+
+  const render = function() {
+    let filterdTodos;
+    
+    if (status === 'SHOW_ACTIVE') {
+      filterdTodos = todos.filter(function(todo) {return !todo.isCompleted});
+    } else if (status === 'SHOW_COMPLETED') {
+      filterdTodos = todos.filter(function(todo) {return todo.isCompleted});
+    } else {
+      filterdTodos = todos;
+    }
+    console.log(filterdTodos);
+    // ul.todo-listの中身を削除
+    for (let i = 0; $ulTodoList.children.length; i++) {
+      $ulTodoList.removeChild($ulTodoList.children[0]);
+    }
+    //for文 前から 初期化・処理の前・処理の後
+    for (let i = 0; i < filterdTodos.length; i++) {
+      const $li = createNewTodo(filterdTodos[i].label);
+      $ulTodoList.appendChild($li);
+    }
+  }
+
+  const addTodo = function(label) {
+    const todo = { 
+      label: label,
+      isCompleted: false,
+      id: Math.floor(10000 * Math.random()),
+    };
+    todos.push(todo);
+    render();
+  };
+  
+  const showAll = function() {
+    status = 'SHOW_ALL';
+    render();
+  };
+  
+  const showActive = function() {
+    status = 'SHOW_ACTIVE';
+    render();
+  };
+  
+  const showCompleted = function() {
+    status = 'SHOW_COMPLETED';
+    render();
+  };
+
+  const toggleTodoStatus = function(id) {
+    const todo = todos.find(function(todo){});
+    // const todo = todosからidに該当するtodoをとってきて代入する
+    if (!todo.isCompleted) {
+      todo.isCompleted = true;
+    } else {
+      todo.isCompleted = false;
+    }
+  };
+  
+  return {
+    addTodo: addTodo,
+    showAll: showAll,
+    showActive: showActive,
+    showCompleted: showCompleted, 
+    toggleTodoStatus: toggleTodoStatus,// 複数の値はreturnできない いくつも返すときはオブジェクト(か、配列。)
+  };
+};
+
+const store = createStore();
+
+const $liTodofilters = document.querySelectorAll('.filters > li');
+const $inputNewTodo = document.querySelector('.new-todo');
+
+$liShowAll = $liTodofilters[0];
+$liShowActive = $liTodofilters[1];
+$liShowCompleted = $liTodofilters[2];
+
+$liShowAll.addEventListener('click',store.showAll);
+$liShowActive.addEventListener('click',store.showActive);
+$liShowCompleted.addEventListener('click',store.showCompleted);
+
+$inputNewTodo.addEventListener('keydown', function(e) {
   if (e.keyCode === 13) {
-    const newTodo = $inputNewTodo.value;
-    // store.addTodo(newTodo)
-    const $ulTodoList = document.getElementsByClassName('todo-list')[0];
-    const $li = createNewTodo(newTodo);
-    $ulTodoList.appendChild($li);
+    const todoLabel = $inputNewTodo.value;
+    store.addTodo(todoLabel);
     $inputNewTodo.value = '';
   }
 });
-
-/* todos で　タスクをためておく配列を作る
-
-const todos = [
-  { 
-    id: 000,
-    label: 'ほげ',
-    isCompleted: true,
-  },
-  { 
-    id: 001,
-    label: 'ほげ',
-    isCompleted: true,
-  },
-  { 
-    id: 002,
-    label: 'ほげ',
-    isCompleted: false,
-  },
-];
-*/
-function CreateStore () {
-    const todos = [];
-    const $ulTodoList = document.querySelector('.todo-list');
-    let satus = 'SHOW_ALL';
-
-    const render = function() {
-      let filterdTodos;
-      
-      if (satus === 'SHOW_ACTIVE') {
-        filterdTodos = todos.filter(function(todo) {return !todo.isCompleted});
-      } else if (satus === 'SHOW_COMPRETED') {
-        filterdTodos = todos.filter(function(todo) {return todo.isCompleted});
-      } else {
-        filterdTodos = todos;
-      }
-    }
-  // ul.todo-listの中身を削除
-  while($ulTodoList.firstChild === null) {
-    $ulTodoList.removeChild($ulTodoList.firstChild);
-  }
-  //for文 前から 初期化・処理の前・処理の後
-  for (let i = 0; i < filterdTodos.length; i++) {
-    const $li = createNewTodo(filterdTodos[i].label);
-    $ulTodoList.appendChild($li);
-  }
-};
-
-const addTodo = function(label) {
-  const todo = { 
-    label: label,
-    isCompleted: false,
-  },
-  todos = todos.push(todo);
-  render();
-};
-
-const showAll = function() {
-  status = 'SHOW-ALL';
-  render();
-};
-
-const showActive = function() {
-  status = 'SHOW-ACTIVE';
-  render();
-};
-
-const showCompereted = function() {
-  status = 'SHOW=COMPLETED';
-  render();
-};
-
-return {
-  addTodo: addTodo,
-  showAll: showAll,
-  showActive: showActive,
-  showCompereted: showCompereted,
-};
-
-const store = CreateStore();
-store.showAll();
-store.showActive();
-store.showCompereted();
