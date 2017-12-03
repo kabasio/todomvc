@@ -1,4 +1,4 @@
-function createNewTodo(name) {
+function createNewTodo(name, id, isCompleted) {
   const $li = document.createElement('li');
   const $div = document.createElement('div');
   $div.className = 'view';
@@ -6,16 +6,13 @@ function createNewTodo(name) {
   const $inputToggle = document.createElement('input');
   $inputToggle.setAttribute('type','checkbox');
   $inputToggle.className = 'toggle';
+  if (isCompleted) {
+    $li.setAttribute('class', 'completed');
+    $inputToggle.setAttribute('checked','');
+  }
+
   $inputToggle.addEventListener('click', function() {
-    if ($li.className === 'completed') {
-      $li.removeAttribute('class');
-      $inputToggle.removeAttribute('checked');
-      store.toggleTodoStatus();
-    } else {
-      $li.setAttribute('class', 'completed');
-      $inputToggle.setAttribute('checked','');
-      store.toggleTodoStatus(); 
-    }
+    store.toggleIsCompleted(id);
   }); 
 
   const $label = document.createElement('label');
@@ -52,14 +49,14 @@ function createStore () {
     } else {
       filterdTodos = todos;
     }
-    console.log(filterdTodos);
     // ul.todo-listの中身を削除
     for (let i = 0; $ulTodoList.children.length; i++) {
       $ulTodoList.removeChild($ulTodoList.children[0]);
     }
     //for文 前から 初期化・処理の前・処理の後
     for (let i = 0; i < filterdTodos.length; i++) {
-      const $li = createNewTodo(filterdTodos[i].label);
+      const todo = filterdTodos[i];
+      const $li = createNewTodo(todo.label,todo.id,todo.isCompleted);
       $ulTodoList.appendChild($li);
     }
   }
@@ -89,14 +86,14 @@ function createStore () {
     render();
   };
 
-  const toggleTodoStatus = function(id) {
-    const todo = todos.find(function(todo){});
-    // const todo = todosからidに該当するtodoをとってきて代入する
+  const toggleIsCompleted = function(id) {
+    const todo = todos.find(function(todo){return todo.id === id});
     if (!todo.isCompleted) {
       todo.isCompleted = true;
     } else {
       todo.isCompleted = false;
     }
+    render();
   };
   
   return {
@@ -104,7 +101,7 @@ function createStore () {
     showAll: showAll,
     showActive: showActive,
     showCompleted: showCompleted, 
-    toggleTodoStatus: toggleTodoStatus,// 複数の値はreturnできない いくつも返すときはオブジェクト(か、配列。)
+    toggleIsCompleted: toggleIsCompleted,// 複数の値はreturnできない いくつも返すときはオブジェクト(か、配列。)
   };
 };
 
