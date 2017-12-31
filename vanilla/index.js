@@ -97,9 +97,7 @@ function createStore () {
     render();
   };
   const deleteCompleted = function() {
-    let todo = todos.filter(function(todo) {return !todo.isCompleted});
-    console.log(todo);
-    todos = todo;
+    todos = todos.filter(function(todo) {return !todo.isCompleted});;
     render();   
   };
 
