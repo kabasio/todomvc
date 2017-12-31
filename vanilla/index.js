@@ -49,6 +49,7 @@ function createStore () {
     } else {
       filterdTodos = todos;
     }
+    
     // ul.todo-listの中身を削除
     for (let i = 0; $ulTodoList.children.length; i++) {
       $ulTodoList.removeChild($ulTodoList.children[0]);
@@ -95,13 +96,20 @@ function createStore () {
     }
     render();
   };
-  
+  const deleteCompleted = function() {
+    let todo = todos.filter(function(todo) {return !todo.isCompleted});
+    console.log(todo);
+    todos.push(todo);
+    render();   
+  };
+
   return {
     addTodo: addTodo,
     showAll: showAll,
     showActive: showActive,
     showCompleted: showCompleted, 
-    toggleIsCompleted: toggleIsCompleted,// 複数の値はreturnできない いくつも返すときはオブジェクト(か、配列。)
+    toggleIsCompleted: toggleIsCompleted,
+    deleteCompleted: deleteCompleted,// 複数の値はreturnできない いくつも返すときはオブジェクト(か、配列。)
   };
 };
 
@@ -113,10 +121,12 @@ const $inputNewTodo = document.querySelector('.new-todo');
 $liShowAll = $liTodofilters[0];
 $liShowActive = $liTodofilters[1];
 $liShowCompleted = $liTodofilters[2];
+$buttonClearCompleted = document.querySelector('.clear-completed');
 
 $liShowAll.addEventListener('click',store.showAll);
 $liShowActive.addEventListener('click',store.showActive);
 $liShowCompleted.addEventListener('click',store.showCompleted);
+$buttonClearCompleted.addEventListener('click',store.deleteCompleted);
 
 $inputNewTodo.addEventListener('keydown', function(e) {
   if (e.keyCode === 13) {
