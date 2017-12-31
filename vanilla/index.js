@@ -35,7 +35,7 @@ function createNewTodo(name, id, isCompleted) {
 };
 
 function createStore () {
-  const todos = [];
+  let todos = [];
   const $ulTodoList = document.querySelector('.todo-list');
   let status = 'SHOW_ALL';
 
@@ -99,7 +99,7 @@ function createStore () {
   const deleteCompleted = function() {
     let todo = todos.filter(function(todo) {return !todo.isCompleted});
     console.log(todo);
-    todos.push(todo);
+    todos = todo;
     render();   
   };
 
